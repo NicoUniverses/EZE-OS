@@ -1,5 +1,10 @@
 name: release
+# Publishes a GitHub release with the wheel and sdist whenever the version in
+# pyproject.toml changes on main (and re-attaches files to manually published releases).
 on:
+  push:
+    branches: [main]
+    paths: ["pyproject.toml"]
   release:
     types: [published]
   workflow_dispatch:
@@ -16,7 +21,15 @@ jobs:
       - run: pip install build pytest
       - run: python -m pytest -q
       - run: python -m build
-      - name: Attach wheel and sdist to the release
+      - name: Create or update the release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "${{ github.event.release.tag_name || 'v0.1.0' }}" dist/* --clobber
+        run: |
+          VERSION=$(python -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          TAG="v$VERSION"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            NOTES=$(python scripts/release_notes.py "$VERSION")
+            gh release create "$TAG" dist/* --target "$GITHUB_SHA" --title "EZE OS $VERSION" --notes "$NOTES" --prerelease
+          fi
