@@ -1,0 +1,28 @@
+name: stats
+# Keeps stats.json (read live by https://ezeos.org) in step with the code on main.
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["stats.json"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pytest
+      - run: python scripts/site_stats.py
+      - name: Commit stats.json if it changed
+        run: |
+          if ! git diff --quiet -- stats.json; then
+            git config user.name "Nicolás E. Veiga Palacios"
+            git config user.email "98459855+NicoUniverses@users.noreply.github.com"
+            git add stats.json
+            git commit -m "stats: update site numbers"
+            git push
+          fi
