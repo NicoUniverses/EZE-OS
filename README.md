@@ -45,7 +45,7 @@ pip install ezeos-0.1.0-py3-none-any.whl     # from the GitHub release
 pip install .
 ```
 
-Python 3.9 or newer.
+Python 3.10 or newer.
 
 ## Quick start
 
