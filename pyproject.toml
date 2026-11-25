@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ezeos"
+version = "0.1.0"
+description = "EZE OS: an experimental, hardware-neutral operating layer for commercial quantum processors"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "GPL-2.0-only" }
+authors = [{ name = "Nicolás E. Veiga Palacios" }]
+maintainers = [{ name = "EZE Capital (Switzerland)" }]
+keywords = ["quantum", "quantum computing", "operating system", "transpiler", "simulator", "qpu"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.optional-dependencies]
+ibm = ["qiskit", "qiskit-ibm-runtime"]
+braket = ["amazon-braket-sdk"]
+iqm = ["iqm-client[qiskit]"]
+ionq = ["requests"]
+quantinuum = ["pytket", "qnexus"]
+dwave = ["dwave-ocean-sdk"]
+dev = ["pytest"]
+
+[project.scripts]
+ezeos = "ezeos.cli:main"
+
+[project.urls]
+Homepage = "https://ezeos.org/index.php"
+Source = "https://github.com/NicoUniverses/EZE-OS"
+
+[tool.setuptools.packages.find]
+include = ["ezeos*"]
