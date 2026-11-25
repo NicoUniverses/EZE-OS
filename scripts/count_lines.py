@@ -4,8 +4,8 @@ import pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 total = 0
 rows = []
-for path in sorted(ROOT.rglob("*.py")):
-    if any(part.startswith(".") or part in ("build", "dist") for part in path.relative_to(ROOT).parts):
+for path in sorted([*ROOT.rglob("*.py"), *ROOT.rglob("*.php")]):
+    if any(part.startswith(".") or part in ("build", "dist", "third_party", "vendor") for part in path.relative_to(ROOT).parts):
         continue
     n = sum(1 for _ in path.open(encoding="utf-8"))
     rows.append((n, path.relative_to(ROOT)))

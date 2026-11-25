@@ -11,8 +11,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 def count_lines() -> int:
     total = 0
-    for path in ROOT.rglob("*.py"):
-        if any(p.startswith(".") or p in ("build", "dist") for p in path.relative_to(ROOT).parts):
+    for path in [*ROOT.rglob("*.py"), *ROOT.rglob("*.php")]:
+        if any(p.startswith(".") or p in ("build", "dist", "third_party", "vendor") for p in path.relative_to(ROOT).parts):
             continue
         total += sum(1 for _ in path.open(encoding="utf-8"))
     return total

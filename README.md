@@ -33,6 +33,8 @@ Website: <https://ezeos.org/index.php> · Releases: [GitHub Releases](../../rele
 | Backends | `ezeos.backends` | Adapters for IBM, Amazon Braket, IQM, IonQ, Quantinuum, and OpenQASM 3 export |
 | Kernel | `ezeos.kernel` | Jobs, priority scheduler, device resource manager, audit log |
 | Annealing | `ezeos.annealing` | QUBO and Ising models, exact and simulated-annealing solvers, D-Wave handoff |
+| Quantum queries | `ezeos.query` | QQL: SEARCH (Grover), OPTIMIZE (QAOA / annealing), SAMPLE; Doctrine-style builder |
+| Doctrine bridge | `bridges/doctrine-php` | PHP package on Doctrine DBAL: quantum queries over MySQL, PostgreSQL, SQLite ... |
 | Algorithms | `ezeos.algorithms` | Bell, GHZ, QFT, Bernstein-Vazirani, Deutsch-Jozsa, Grover, QPE, QAOA, VQE |
 
 No third-party dependencies. Vendor SDKs are imported only when you use that vendor's backend.
@@ -66,6 +68,21 @@ ezeos transpile ghz:4 --device quantware_soprano_d5 --qasm3 > ghz.qasm
 ezeos anneal 0-1,1-2,2-3,3-0                    # MaxCut as a D-Wave style QUBO
 ```
 
+## Doctrine integration
+
+EZE OS reads data through [Doctrine DBAL](https://www.doctrine-project.org/) and answers quantum
+queries about it:
+
+```php
+$qc = new EzeOs\Doctrine\QuantumConnection($doctrineConnection);
+$best = $qc->createQuantumQueryBuilder()
+    ->optimize(3)->from('assets')->where('sector != :x')->setParameter('x', 'crypto')
+    ->maximize('expected_return')->minimize('risk', 0.5)->on('iqm_radiance_20')
+    ->executeQuantumQuery();
+```
+
+Layers, the QQL language and the code taken from Doctrine: [docs/DOCTRINE.md](docs/DOCTRINE.md).
+
 ## Supported hardware
 
 See [docs/HARDWARE.md](docs/HARDWARE.md) for models, manufacturers, prices and sources.
@@ -91,7 +108,7 @@ python -m pytest -q          # every rewrite rule is checked against exact unita
 python scripts/count_lines.py
 ```
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and
+Third-party code: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Read [CONTRIBUTING.md](CONTRIBUTING.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and
 [docs/ROADMAP.md](docs/ROADMAP.md). Security reports: [SECURITY.md](SECURITY.md).
 
 ## Disclaimer

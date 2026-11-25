@@ -63,6 +63,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     d = sub.add_parser("draw", help="ASCII drawing of a program")
     d.add_argument("program")
 
+    qq = sub.add_parser("query", help="run a QQL quantum query (JSON in, JSON out; used by the Doctrine bridge)")
+    qq.add_argument("--request", help="path to a JSON request file (default: read stdin)")
+    qq.add_argument("--qql", help="QQL text, overrides the request's qql field")
+
     a = sub.add_parser("anneal", help="solve a MaxCut QUBO (D-Wave style) on the CPU")
     a.add_argument("edges", help="e.g. 0-1,1-2,2-0")
 
@@ -106,6 +110,19 @@ def main(argv: Optional[List[str]] = None) -> int:
                 bar = "#" * max(1, int(40 * c / job.shots))
                 print(f"  {bits}  {c:6d}  {bar}")
         return 0
+    if args.cmd == "query":
+        from .query import handle_request
+
+        if args.request:
+            with open(args.request, encoding="utf-8") as fh:
+                request = json.load(fh)
+        else:
+            request = json.load(sys.stdin)
+        if args.qql:
+            request["qql"] = args.qql
+        response = handle_request(request)
+        print(json.dumps(response, ensure_ascii=False))
+        return 0 if response.get("ok") else 1
     if args.cmd == "anneal":
         from .annealing import maxcut_qubo
 

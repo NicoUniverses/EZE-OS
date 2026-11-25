@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ezeos"
-version = "0.1.0"
-description = "EZE OS: an experimental, hardware-neutral operating layer for commercial quantum processors"
+version = "0.2.0"
+description = "EZE OS: experimental software for managing quantum chips, with quantum queries (QQL) for Doctrine"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "GPL-2.0-only" }
 authors = [{ name = "Nicolás E. Veiga Palacios" }]
 maintainers = [{ name = "EZE Capital (Switzerland)" }]
-keywords = ["quantum", "quantum computing", "operating system", "transpiler", "simulator", "qpu"]
+keywords = ["quantum", "quantum computing", "transpiler", "simulator", "qpu", "doctrine", "qql", "qubo"]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Intended Audience :: Science/Research",

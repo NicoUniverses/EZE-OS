@@ -1,0 +1,20 @@
+{
+    "name": "ezeos/doctrine-quantum",
+    "description": "EZE OS bridge for Doctrine DBAL: run quantum queries (QQL) on data from any Doctrine connection.",
+    "type": "library",
+    "license": "GPL-2.0-only",
+    "keywords": ["doctrine", "dbal", "quantum", "qubo", "grover", "ezeos"],
+    "homepage": "https://ezeos.org/index.php",
+    "authors": [{"name": "Nicolás E. Veiga Palacios"}],
+    "require": {
+        "php": "^8.2",
+        "doctrine/dbal": "^4.0",
+        "doctrine/lexer": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {"EzeOs\\Doctrine\\": "src/"}
+    },
+    "scripts": {
+        "test": "php tests/run.php"
+    }
+}

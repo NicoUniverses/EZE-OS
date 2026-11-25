@@ -18,3 +18,21 @@ jobs:
       - run: pip install pytest
       - run: python -m pytest -q
       - run: python scripts/count_lines.py
+  doctrine-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install .
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo_sqlite
+      - run: composer install --no-interaction --no-progress
+        working-directory: bridges/doctrine-php
+      - run: php tests/run.php
+        working-directory: bridges/doctrine-php
+      - run: php examples/demo.php
+        working-directory: bridges/doctrine-php

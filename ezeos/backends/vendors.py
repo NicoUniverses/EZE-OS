@@ -26,7 +26,7 @@ class LocalBackend(Backend):
         noisy = bool(self.options.get("noisy", False))
         noise = NoiseModel.from_device(self.device) if noisy else None
         used = sorted({q for i in circuit for q in i.qubits})
-        if circuit.num_qubits > 20 and used:
+        if used and len(used) < circuit.num_qubits:   # simulate only the qubits the job touches
             circuit = _compact(circuit, used)
         sim = Simulator(seed=self.options.get("seed"), noise=noise)
         res = sim.run(circuit, shots)

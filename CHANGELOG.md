@@ -2,6 +2,23 @@
 
 All notable changes to EZE OS. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-11-25
+
+Doctrine integration: quantum queries over any database Doctrine DBAL can read.
+
+### Added
+- `ezeos.query`: QQL (Quantum Query Language) with `SEARCH` (Grover), `OPTIMIZE` (QUBO → QAOA or annealing)
+  and `SAMPLE` (amplitude encoding); parser, planner, JSON protocol and a Doctrine-style `QueryBuilder`.
+- `ezeos.query.lexer`: Python port of `Doctrine\Common\Lexer\AbstractLexer` (MIT).
+- `ezeos query` CLI command (JSON in, JSON out), used by the PHP bridge.
+- `bridges/doctrine-php`: `ezeos/doctrine-quantum` PHP package on Doctrine DBAL 4 and doctrine/lexer 3
+  (`QuantumConnection`, `QuantumQueryBuilder`, `QuantumResult`, `QqlLexer`, `ProcessBridge`), examples and tests.
+- `third_party/doctrine-lexer`: vendored doctrine/lexer sources with their MIT license.
+- `docs/DOCTRINE.md`, `THIRD_PARTY_NOTICES.md`.
+
+### Changed
+- The local backend simulates only the qubits a job touches, so large devices run quickly.
+
 ## [0.1.0] - 2026-11-25
 
 First public release. Experimental.

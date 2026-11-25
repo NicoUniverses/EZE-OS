@@ -1,9 +1,14 @@
 # EZE OS architecture
 
 ```
- user program (Python API, OpenQASM 2, CLI built-ins)
-        │
-        ▼
+ user program (Python API, OpenQASM 2, CLI built-ins)      PHP app + Doctrine DBAL
+        │                                                        │ QQL via bridges/doctrine-php
+        │                                    ┌───────────────────┘
+        │                                    ▼
+        │                           ┌──────────────────┐  SEARCH → Grover · OPTIMIZE → QAOA/QUBO
+        │                           │   ezeos.query    │  SAMPLE → amplitude encoding
+        │                           └────────┬─────────┘
+        ▼                                    ▼
  ┌──────────────┐   Job(circuit, shots, priority, device?)
  │    kernel    │── priority queue ── resource manager (picks a free device by expected fidelity)
  └──────┬───────┘                          │
