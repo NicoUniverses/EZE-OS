@@ -1,6 +1,6 @@
 # EZE OS
 
-**An experimental, hardware-neutral operating layer for commercial quantum processors.**
+**Experimental software for managing quantum chips.** Mascot: Qubi, the kitten.
 
 EZE OS takes one quantum program and runs it on the chips you can actually buy today:
 superconducting QPUs from QuantWare, Rigetti, IQM and IBM, trapped-ion systems from IonQ,
