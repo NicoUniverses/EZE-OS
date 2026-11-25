@@ -1,7 +1,8 @@
 name: release
 on:
-  push:
-    tags: ["v*"]
+  release:
+    types: [published]
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -15,6 +16,7 @@ jobs:
       - run: pip install build pytest
       - run: python -m pytest -q
       - run: python -m build
-      - uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*
+      - name: Attach wheel and sdist to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name || 'v0.1.0' }}" dist/* --clobber
