@@ -18,7 +18,7 @@
  └──────┬───────┘
         ▼
  ┌──────────────┐  local simulator · IBM · Braket · IQM · IonQ · Quantinuum · OpenQASM 3 export
- │   backends   │  vendor SDKs imported lazily, never required
+ │   backends   │  stabilizer (Clifford, 1000s of qubits) · vendor SDKs imported lazily, never required
  └──────┬───────┘
         ▼
      Result(counts, shots, backend, metadata)  +  kernel audit log

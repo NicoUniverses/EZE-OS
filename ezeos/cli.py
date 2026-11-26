@@ -54,11 +54,17 @@ def main(argv: Optional[List[str]] = None) -> int:
     r = sub.add_parser("run", help="run a program through the EZE OS kernel")
     r.add_argument("program")
     r.add_argument("--device", default="ezeos_sim")
-    r.add_argument("--backend", default="local", help="local | export | ibm | braket | iqm | ionq | quantinuum")
+    r.add_argument("--backend", default="local", help="local | stabilizer | export | ibm | braket | iqm | ionq | quantinuum")
     r.add_argument("--shots", type=int, default=1024)
     r.add_argument("--noisy", action="store_true", help="apply the device's noise profile (local backend)")
     r.add_argument("--seed", type=int)
     r.add_argument("--json", action="store_true")
+
+    st = sub.add_parser("stabilizer", help="run a Clifford program on the stabilizer simulator (thousands of qubits)")
+    st.add_argument("program", help="file.qasm or built-in, e.g. ghz:1000")
+    st.add_argument("--shots", type=int, default=16)
+    st.add_argument("--seed", type=int)
+    st.add_argument("--stabilizers", action="store_true", help="print the final stabilizer generators")
 
     d = sub.add_parser("draw", help="ASCII drawing of a program")
     d.add_argument("program")
@@ -93,7 +99,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         if not circ.has_measurements():
             circ.measure_all()
         k = Kernel()
-        opts = {"noisy": args.noisy, "seed": args.seed} if args.backend == "local" else {}
+        opts = {"noisy": args.noisy, "seed": args.seed} if args.backend in ("local", "stabilizer") else {}
         jid = k.submit(Job(circ, shots=args.shots, device=args.device, backend=args.backend, options=opts))
         k.run_all()
         job = k.jobs[jid]
@@ -109,6 +115,25 @@ def main(argv: Optional[List[str]] = None) -> int:
             for bits, c in job.result.top(8):
                 bar = "#" * max(1, int(40 * c / job.shots))
                 print(f"  {bits}  {c:6d}  {bar}")
+        return 0
+    if args.cmd == "stabilizer":
+        from .stabilizer import NotCliffordError, StabilizerSimulator
+
+        circ = _load(args.program)
+        sim = StabilizerSimulator(seed=args.seed)
+        try:
+            if args.stabilizers:
+                for g in sim.state(circ.remove_final_measurements()).stabilizers():
+                    print(g)
+                return 0
+            res = sim.run(circ, args.shots)
+        except NotCliffordError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+        print(f"{BANNER}\n{circ.name}: {circ.num_qubits} qubits, {len(circ)} operations, stabilizer method")
+        for bits, c in res.top(8):
+            shown = bits if len(bits) <= 64 else f"{bits[:30]}...{bits[-30:]}"
+            print(f"  {shown}  {c:6d}")
         return 0
     if args.cmd == "query":
         from .query import handle_request

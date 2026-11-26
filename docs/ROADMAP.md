@@ -13,6 +13,9 @@ EZE OS grows in weekly releases. Each release must keep the full test-suite gree
 ## 0.2
 - [x] Doctrine integration: QQL quantum queries over Doctrine DBAL (PHP bridge + Python engine)
 
+## 0.3
+- [x] Stabilizer simulator for large Clifford circuits (`ezeos.stabilizer`, `stabilizer` backend, `ezeos stabilizer` CLI)
+
 ## Next
 - [ ] QQL: COUNT (quantum counting), JOIN of two tables, Doctrine ORM repository helpers
 - [ ] Doctrine DBAL middleware that logs QQL next to SQL
@@ -22,7 +25,6 @@ EZE OS grows in weekly releases. Each release must keep the full test-suite gree
 - [ ] OpenQASM 3 parser (classical control, mid-circuit measurement)
 - [ ] Pulse-level export for QuantWare chips (Qblox, Quantum Machines, Zurich Instruments)
 - [ ] Error mitigation: readout calibration, zero-noise extrapolation
-- [ ] Stabilizer simulator for large Clifford circuits
 - [ ] Minor-embedding for annealers (Chimera / Pegasus / Zephyr graphs)
 - [ ] Kernel: persistent job store, cost accounting per vendor, multi-user quotas
 - [ ] Validation runs on real hardware, published with raw data

@@ -34,6 +34,22 @@ class LocalBackend(Backend):
         return res
 
 
+class StabilizerBackend(Backend):
+    """EZE OS stabilizer (Clifford) simulator: no width limit beyond the device itself."""
+
+    name = "stabilizer"
+
+    def run(self, circuit: Circuit, shots: int = 1024) -> Result:
+        from ..stabilizer import StabilizerSimulator
+
+        noisy = bool(self.options.get("noisy", False))
+        noise = NoiseModel.from_device(self.device) if noisy else None
+        sim = StabilizerSimulator(seed=self.options.get("seed"), noise=noise)
+        res = sim.run(circuit, shots)
+        res.backend = f"stabilizer:{self.device.key}{':noisy' if noisy else ''}"
+        return res
+
+
 def _compact(circuit: Circuit, used) -> Circuit:
     idx = {p: k for k, p in enumerate(used)}
     c = Circuit(len(used), circuit.num_clbits, circuit.name, metadata=dict(circuit.metadata))
@@ -184,6 +200,7 @@ def _prx_to_u(circuit: Circuit) -> Circuit:
 
 REGISTRY = {
     "local": LocalBackend,
+    "stabilizer": StabilizerBackend,
     "ibm": IBMBackend,
     "braket": BraketBackend,
     "iqm": IQMBackend,

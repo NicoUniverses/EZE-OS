@@ -2,6 +2,23 @@
 
 All notable changes to EZE OS. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-11-26
+
+Stabilizer simulator: Clifford circuits with hundreds or thousands of qubits.
+
+### Added
+- `ezeos.stabilizer`: tableau simulator after Aaronson & Gottesman (Phys. Rev. A 70, 052328, 2004) with
+  destabilizers, Z measurement, reset, Pauli expectation values and dense export for small states.
+- Gate rules are derived from the exact unitaries in `ezeos.gates` by Pauli conjugation, so every gate at a
+  Clifford angle (`rz(pi/2)`, `rxx(pi/2)`, `gpi2`, `prx`, `ecr`, `iswap`, transpiled `u`, ...) is supported and
+  non-Clifford gates are rejected with `NotCliffordError`.
+- `StabilizerSimulator`: shots, mid-circuit measurement, reset, depolarizing (Pauli) and readout noise from
+  `NoiseModel`; the measurement-free prefix is evolved once and reused for every shot.
+- `is_clifford()`, `random_clifford_circuit()`, `pauli_mul()` and Pauli string helpers.
+- `stabilizer` backend for the kernel (`ezeos run ... --backend stabilizer`) and the `ezeos stabilizer` CLI command.
+- `tests/test_stabilizer.py`: every rule checked against `U P U^dagger`, and random circuits checked against the
+  state-vector simulator (states, Pauli expectations and measurement statistics).
+
 ## [0.2.0] - 2026-11-25
 
 Doctrine integration: quantum queries over any database Doctrine DBAL can read.

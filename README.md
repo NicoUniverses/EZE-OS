@@ -28,6 +28,7 @@ Website: <https://ezeos.org/index.php> · Releases: [GitHub Releases](../../rele
 | Gates | `ezeos.gates` | 34 exact gate definitions, including vendor natives (`sx`, `prx`, `gpi`, `gpi2`, `ms`, `ecr`, `rzz`) |
 | Circuits | `ezeos.circuit` | Fluent circuit API, depth, layers, inverse, ASCII drawing |
 | Simulator | `ezeos.simulator` | Pure-Python state-vector simulator (up to 22 qubits), noise from device fidelities |
+| Stabilizer | `ezeos.stabilizer` | Clifford tableau simulator (Aaronson-Gottesman) for thousands of qubits, with Pauli and readout noise |
 | Devices | `ezeos.devices` | Catalog of purchasable chips: qubits, topology, native gates, price, source |
 | Transpiler | `ezeos.transpile` | Lowering, routing with SWAP insertion, 1-qubit fusion, native synthesis per vendor |
 | Backends | `ezeos.backends` | Adapters for IBM, Amazon Braket, IQM, IonQ, Quantinuum, and OpenQASM 3 export |
@@ -66,6 +67,7 @@ ezeos devices                                   # chips you can buy, with prices
 ezeos run grover:101 --device rigetti_novera --noisy
 ezeos transpile ghz:4 --device quantware_soprano_d5 --qasm3 > ghz.qasm
 ezeos anneal 0-1,1-2,2-3,3-0                    # MaxCut as a D-Wave style QUBO
+ezeos stabilizer ghz:1000 --shots 8             # Clifford circuits far beyond state-vector size
 ```
 
 ## Doctrine integration
