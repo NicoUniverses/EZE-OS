@@ -5,7 +5,7 @@ Licensed under the GNU General Public License v2.0 (GPL-2.0-only).
 
 EXPERIMENTAL SOFTWARE, PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 """
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 __author__ = "Nicolás E. Veiga Palacios"
 __maintainer__ = "EZE Capital (Switzerland)"
 __license__ = "GPL-2.0-only"

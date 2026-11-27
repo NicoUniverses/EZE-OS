@@ -1,8 +1,8 @@
 {
-  "version": "0.3.0",
-  "lines": 6299,
-  "tests": 200,
-  "wheel": "https://github.com/NicoUniverses/EZE-OS/releases/download/v0.3.0/ezeos-0.3.0-py3-none-any.whl",
-  "sdist": "https://github.com/NicoUniverses/EZE-OS/releases/download/v0.3.0/ezeos-0.3.0.tar.gz",
-  "release": "https://github.com/NicoUniverses/EZE-OS/releases/tag/v0.3.0"
+  "version": "0.3.1",
+  "lines": 6412,
+  "tests": 215,
+  "wheel": "https://github.com/NicoUniverses/EZE-OS/releases/download/v0.3.1/ezeos-0.3.1-py3-none-any.whl",
+  "sdist": "https://github.com/NicoUniverses/EZE-OS/releases/download/v0.3.1/ezeos-0.3.1.tar.gz",
+  "release": "https://github.com/NicoUniverses/EZE-OS/releases/tag/v0.3.1"
 }

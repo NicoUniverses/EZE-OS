@@ -167,6 +167,9 @@ def _rules(ins: Instruction) -> Optional[List[Tuple[str, Tuple[int, ...], Tuple[
     if n == "rzz":
         a, b = q
         return [("cx", (a, b), ()), ("rz", (b,), (p[0],)), ("cx", (a, b), ())]
+    if n == "zz":
+        a, b = q
+        return [("cx", (a, b), ()), ("rz", (b,), (p[0],)), ("cx", (a, b), ())]
     if n == "rxx":
         a, b = q
         return [("h", (a,), ()), ("h", (b,), ()), ("rzz", (a, b), p), ("h", (a,), ()), ("h", (b,), ())]
@@ -353,8 +356,9 @@ def _cx_native(c: int, t: int, native: Sequence[str]) -> List[Instruction]:
         return [Instruction("cx", (c, t))]
     if "cz" in nset:
         return [Instruction("h", (t,)), Instruction("cz", (c, t)), Instruction("h", (t,))]
-    if "rzz" in nset:   # CZ = RZZ(pi/2) RZ(-pi/2) RZ(-pi/2) up to phase
-        return [Instruction("h", (t,)), Instruction("rzz", (c, t), (PI / 2,)),
+    zz_name = "rzz" if "rzz" in nset else "zz" if "zz" in nset else None
+    if zz_name:   # CZ = ZZ(pi/2) RZ(-pi/2) RZ(-pi/2) up to phase (Quantinuum RZZ, IonQ Forte ZZ)
+        return [Instruction("h", (t,)), Instruction(zz_name, (c, t), (PI / 2,)),
                 Instruction("rz", (c,), (-PI / 2,)), Instruction("rz", (t,), (-PI / 2,)),
                 Instruction("h", (t,))]
     if "ms" in nset or "rxx" in nset:
@@ -387,7 +391,7 @@ def to_native(circuit: Circuit, device: Device) -> Circuit:
 
 
 def _ionq_virtual_z(circuit: Circuit) -> Circuit:
-    """Absorb RZ gates into the phases of following GPI/GPI2/MS gates (IonQ style)."""
+    """Absorb RZ gates into the phases of following GPI/GPI2/MS gates (IonQ style); ZZ is untouched."""
     frame = [0.0] * circuit.num_qubits
     out = Circuit(circuit.num_qubits, circuit.num_clbits, circuit.name, metadata=dict(circuit.metadata))
     for ins in circuit:
@@ -403,6 +407,7 @@ def _ionq_virtual_z(circuit: Circuit) -> Circuit:
             out.instructions.append(Instruction("ms", ins.qubits, (_wrap(ins.params[0] - frame[a]),
                                                                    _wrap(ins.params[1] - frame[b]))))
             continue
+        # ZZ is diagonal, so it commutes with RZ: the frames pass through unchanged.
         out.instructions.append(ins)
     out.metadata["final_z_frame"] = frame
     return out

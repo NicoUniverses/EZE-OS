@@ -54,7 +54,7 @@ def test_synth_1q_every_vendor_basis(basis):
 
 @pytest.mark.parametrize("gate,params", [("cz", ()), ("cy", ()), ("ch", ()), ("cp", (0.7,)), ("crz", (1.1,)),
                                          ("swap", ()), ("rzz", (0.4,)), ("rxx", (0.9,)), ("ryy", (-0.6,)),
-                                         ("iswap", ()), ("ms", (0.3, -1.2))])
+                                         ("iswap", ()), ("ms", (0.3, -1.2)), ("zz", (0.4,))])
 def test_two_qubit_lowering_rules(gate, params):
     c = Circuit(2)
     c.append(gate, [0, 1], params)
@@ -286,7 +286,8 @@ def test_ionq_payload_shape():
     native, _ = transpile(A.bell(), dev)
     payload = IonQBackend(dev).payload(native, 100)
     gates = {op["gate"] for op in payload["input"]["circuit"]}
-    assert gates <= {"gpi", "gpi2", "ms"} and "ms" in gates
+    # Forte-class systems take ZZ, not MS (MS is Aria-only)
+    assert gates <= {"gpi", "gpi2", "zz"} and "zz" in gates
 
 
 def test_export_backend(tmp_path):

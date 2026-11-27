@@ -16,6 +16,13 @@ EZE OS grows in weekly releases. Each release must keep the full test-suite gree
 ## 0.3
 - [x] Stabilizer simulator for large Clifford circuits (`ezeos.stabilizer`, `stabilizer` backend, `ezeos stabilizer` CLI)
 
+## 0.3.x: vendor native-gate corrections
+- [x] IonQ Forte: `zz` instead of `ms` (0.3.1)
+- [ ] Quantinuum Helios: `U1q`/phased-X + `rz`, `ZZMax` and `RZZ`, with a public source
+- [ ] Rigetti Cepheus generation: RX/RZ + `cz` (no `iswap`), with a public source
+- [ ] AQT IBEX Q1: `R(θ, φ)`, `RZ`, `RXX`, with a public source
+- [ ] Fidelities in the catalog from public vendor data only
+
 ## Next
 - [ ] QQL: COUNT (quantum counting), JOIN of two tables, Doctrine ORM repository helpers
 - [ ] Doctrine DBAL middleware that logs QQL next to SQL

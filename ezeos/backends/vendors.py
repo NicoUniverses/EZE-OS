@@ -114,7 +114,7 @@ class IQMBackend(Backend):
 
 
 class IonQBackend(Backend):
-    """IonQ native-gate JSON (GPI, GPI2, MS) for the IonQ REST API."""
+    """IonQ native-gate JSON (GPI, GPI2 and MS on Aria / ZZ on Forte), all phases in turns."""
 
     name = "ionq"
 
@@ -128,6 +128,8 @@ class IonQBackend(Backend):
             elif ins.name == "ms":
                 ops.append({"gate": "ms", "targets": list(ins.qubits),
                             "phases": [p / (2 * math.pi) for p in ins.params]})
+            elif ins.name == "zz":
+                ops.append({"gate": "zz", "targets": list(ins.qubits), "angle": ins.params[0] / (2 * math.pi)})
         return {"target": self.options.get("target", "qpu.forte-enterprise-1"), "shots": shots,
                 "input": {"format": "ionq.circuit.v0", "gateset": "native",
                           "qubits": circuit.num_qubits, "circuit": ops}}

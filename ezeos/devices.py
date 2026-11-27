@@ -100,7 +100,9 @@ class Device:
 IBM_NATIVE = ("rz", "sx", "x", "cz")
 IQM_NATIVE = ("prx", "cz")
 RIGETTI_NATIVE = ("rx", "rz", "cz", "iswap")
-IONQ_NATIVE = ("gpi", "gpi2", "ms")
+IONQ_ARIA_NATIVE = ("gpi", "gpi2", "ms")   # MS: Aria-class systems only
+IONQ_FORTE_NATIVE = ("gpi", "gpi2", "zz")  # ZZ: Forte-class systems only
+# https://docs.ionq.com/guides/getting-started-with-native-gates (read 2026-11-27)
 QUANTINUUM_NATIVE = ("prx", "rz", "rzz")
 SUPERCONDUCTING_GENERIC = ("rx", "ry", "rz", "cz")
 TRAPPED_ION_GENERIC = ("rx", "ry", "rz", "rxx")
@@ -180,7 +182,7 @@ _add(Device(
 ))
 _add(Device(
     key="ionq_forte_enterprise", vendor="IonQ", model="Forte Enterprise", qubits=36,
-    technology="trapped ion (Yb+)", form="system", native_gates=IONQ_NATIVE,
+    technology="trapped ion (Yb+)", form="system", native_gates=IONQ_FORTE_NATIVE,
     topology=lambda: all_to_all(36), purchase="Full system, contact sales",
     source="https://ionq.com/", sdk="IonQ API (native gates JSON) / Amazon Braket / Qiskit-IonQ",
     fidelity_2q=0.995, aliases=("ionq", "forte"),

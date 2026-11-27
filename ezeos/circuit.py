@@ -137,6 +137,7 @@ class Circuit:
     def rxx(self, theta: float, a: int, b: int) -> "Circuit": return self.append("rxx", [a, b], [theta])
     def ryy(self, theta: float, a: int, b: int) -> "Circuit": return self.append("ryy", [a, b], [theta])
     def rzz(self, theta: float, a: int, b: int) -> "Circuit": return self.append("rzz", [a, b], [theta])
+    def zz(self, theta: float, a: int, b: int) -> "Circuit": return self.append("zz", [a, b], [theta])
     def ccx(self, c0: int, c1: int, t: int) -> "Circuit": return self.append("ccx", [c0, c1, t])
     def cswap(self, c: int, a: int, b: int) -> "Circuit": return self.append("cswap", [c, a, b])
 
@@ -238,7 +239,7 @@ class Circuit:
 
 _SELF_INVERSE = {"id", "x", "y", "z", "h", "cx", "cy", "cz", "ch", "swap", "ccx", "cswap"}
 _PAIR = {"s": "sdg", "sdg": "s", "t": "tdg", "tdg": "t", "sx": "sxdg", "sxdg": "sx"}
-_NEG = {"rx", "ry", "rz", "p", "cp", "crz", "rxx", "ryy", "rzz"}
+_NEG = {"rx", "ry", "rz", "p", "cp", "crz", "rxx", "ryy", "rzz", "zz"}
 
 
 def _inverse_of(name: str, params: Tuple[float, ...]) -> Tuple[str, Tuple[float, ...]]:

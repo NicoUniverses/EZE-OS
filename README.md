@@ -25,7 +25,7 @@ Website: <https://ezeos.org/index.php> · Releases: [GitHub Releases](../../rele
 
 | Layer | Module | What it gives you |
 |---|---|---|
-| Gates | `ezeos.gates` | 34 exact gate definitions, including vendor natives (`sx`, `prx`, `gpi`, `gpi2`, `ms`, `ecr`, `rzz`) |
+| Gates | `ezeos.gates` | 35 exact gate definitions, including vendor natives (`sx`, `prx`, `gpi`, `gpi2`, `ms`, `zz`, `ecr`, `rzz`) |
 | Circuits | `ezeos.circuit` | Fluent circuit API, depth, layers, inverse, ASCII drawing |
 | Simulator | `ezeos.simulator` | Pure-Python state-vector simulator (up to 22 qubits), noise from device fidelities |
 | Stabilizer | `ezeos.stabilizer` | Clifford tableau simulator (Aaronson-Gottesman) for thousands of qubits, with Pauli and readout noise |

@@ -294,6 +294,18 @@ def _rzz(theta: float) -> Matrix:
     ]
 
 
+def _zz(theta: float) -> Matrix:
+    """IonQ Forte native ZZ gate, ``exp(-i theta/2 Z⊗Z)`` with ``theta`` in radians.
+
+    IonQ documents ZZ(t) = exp(-i pi t Z⊗Z) with ``t`` in turns (1 turn = 2 pi rad),
+    so ``theta = 2 pi t``; the IonQ backend converts back to turns. It has the same
+    matrix as :func:`_rzz` but is kept as its own name so the transpiler and the
+    IonQ payload emit exactly the gate Forte-class systems accept.
+    Source: https://docs.ionq.com/guides/getting-started-with-native-gates
+    """
+    return _rzz(theta)
+
+
 def _ms(phi0: float, phi1: float) -> Matrix:
     """IonQ native fully entangling Molmer-Sorensen gate (angles in radians)."""
     a = SQRT1_2
@@ -370,7 +382,8 @@ _register("ecr", 2, 0, _ecr, "IBM echoed cross-resonance")
 _register("rxx", 2, 1, _rxx, "XX rotation")
 _register("ryy", 2, 1, _ryy, "YY rotation")
 _register("rzz", 2, 1, _rzz, "ZZ rotation (Quantinuum native family)")
-_register("ms", 2, 2, _ms, "IonQ native Molmer-Sorensen")
+_register("ms", 2, 2, _ms, "IonQ native Molmer-Sorensen (Aria-class systems)")
+_register("zz", 2, 1, _zz, "IonQ native ZZ (Forte-class systems)")
 _register("ccx", 3, 0, _ccx, "Toffoli")
 _register("cswap", 3, 0, _cswap, "Fredkin")
 

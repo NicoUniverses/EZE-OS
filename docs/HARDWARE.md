@@ -53,7 +53,7 @@ and hands the problem to D-Wave's Ocean SDK.
 | IBM Heron | `rz`, `sx`, `x` | `cz` | RZ is virtual (frame change) |
 | IQM | `prx` | `cz` | RZ synthesized from PRX |
 | Quantinuum | `prx`, `rz` | `rzz` | arbitrary-angle ZZ |
-| IonQ | `gpi`, `gpi2` | `ms` | RZ tracked as a virtual frame |
+| IonQ Forte | `gpi`, `gpi2` | `zz` (ZZ, angle in turns) | RZ tracked as a virtual frame; ZZ commutes with it. MS is Aria-only ([IonQ docs](https://docs.ionq.com/guides/getting-started-with-native-gates), read 2026-11-27) |
 | AQT | `rx`, `ry`, `rz` | `rxx` | Mølmer-Sørensen as RXX |
 | QuantWare, SpinQ | `rx`, `ry`, `rz` | `cz` | depends on the buyer's control stack |
 | Rigetti | `rx`, `rz` | `cz`, `iswap` | |

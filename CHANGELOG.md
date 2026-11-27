@@ -2,6 +2,24 @@
 
 All notable changes to EZE OS. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.3.1] - 2026-11-27
+
+IonQ Forte native gates: the transpiler now emits ZZ instead of Mølmer-Sørensen.
+
+### Fixed
+- IonQ Forte Enterprise used `ms` as its two-qubit native gate, but IonQ documents MS only for Aria-class
+  systems and ZZ for Forte-class systems
+  ([getting started with native gates](https://docs.ionq.com/guides/getting-started-with-native-gates), read
+  2026-11-27). The Forte native set is now `gpi`, `gpi2`, `zz`.
+
+### Added
+- `zz` gate (`Circuit.zz`): IonQ ZZ(t) = exp(-i·π·t·Z⊗Z) with t in turns; EZE OS stores the angle in radians
+  (θ = 2πt) and the IonQ backend sends `{"gate": "zz", "targets": [...], "angle": t}`.
+- CX synthesis through ZZ(π/2), a lowering rule for `zz`, OpenQASM export as `rzz`, inversion and stabilizer
+  support (ZZ(π/2) is Clifford). The virtual-Z pass leaves ZZ untouched because it commutes with RZ.
+- `tests/test_ionq_zz.py`: the matrix is checked entry by entry against IonQ's definition, and transpiled Forte
+  circuits are checked against the exact unitary with the virtual-Z frame undone.
+
 ## [0.3.0] - 2026-11-26
 
 Stabilizer simulator: Clifford circuits with hundreds or thousands of qubits.

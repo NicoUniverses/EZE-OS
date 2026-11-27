@@ -17,6 +17,7 @@ _QASM2_NAMES = {
     "t": "t", "tdg": "tdg", "sx": "sx", "sxdg": "sxdg", "rx": "rx", "ry": "ry",
     "rz": "rz", "p": "u1", "u": "u3", "cx": "cx", "cy": "cy", "cz": "cz", "ch": "ch",
     "cp": "cu1", "crz": "crz", "swap": "swap", "rxx": "rxx", "rzz": "rzz",
+    "zz": "rzz",  # IonQ ZZ(theta) has exactly the RZZ(theta) matrix
     "ccx": "ccx", "cswap": "cswap",
 }
 
