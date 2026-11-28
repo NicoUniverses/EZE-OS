@@ -85,18 +85,19 @@ def synth_1q(u: G.Matrix, q: int, basis: Sequence[str]) -> List[Instruction]:
         out.append(Instruction("sx", (q,)))
         rz(phi + PI)
         return out
-    if "prx" in b:                               # IQM / Quantinuum: PRX + (virtual) RZ
+    phased = "prx" if "prx" in b else "u1q" if "u1q" in b else None
+    if phased:                                   # IQM PRX / Quantinuum U1q, + (virtual) RZ
         # u = RZ(phi) RY(theta) RZ(lam) = PRX(theta, phi + pi/2) . RZ(phi + lam)
         z = phi + lam
         if not _is_zero_angle(z):
             if "rz" in b:
                 rz(z)
             else:   # RZ(z) = RX(pi/2) RY(z)... expressed with PRX only
-                out.append(Instruction("prx", (q,), (-PI / 2, 0.0)))
-                out.append(Instruction("prx", (q,), (_wrap(z), PI / 2)))
-                out.append(Instruction("prx", (q,), (PI / 2, 0.0)))
+                out.append(Instruction(phased, (q,), (-PI / 2, 0.0)))
+                out.append(Instruction(phased, (q,), (_wrap(z), PI / 2)))
+                out.append(Instruction(phased, (q,), (PI / 2, 0.0)))
         if not _is_zero_angle(theta):
-            out.append(Instruction("prx", (q,), (theta, _wrap(phi + PI / 2))))
+            out.append(Instruction(phased, (q,), (theta, _wrap(phi + PI / 2))))
         return out
     if "gpi2" in b:                              # IonQ: GPI2 + virtual RZ (frame tracked later)
         # RY(theta) = RX(pi/2) RZ(-theta) RX(-pi/2); RX(+-pi/2) = GPI2(0) / GPI2(pi)
@@ -170,6 +171,9 @@ def _rules(ins: Instruction) -> Optional[List[Tuple[str, Tuple[int, ...], Tuple[
     if n == "zz":
         a, b = q
         return [("cx", (a, b), ()), ("rz", (b,), (p[0],)), ("cx", (a, b), ())]
+    if n == "zzmax":
+        a, b = q
+        return [("cx", (a, b), ()), ("rz", (b,), (PI / 2,)), ("cx", (a, b), ())]
     if n == "rxx":
         a, b = q
         return [("h", (a,), ()), ("h", (b,), ()), ("rzz", (a, b), p), ("h", (a,), ()), ("h", (b,), ())]
@@ -356,8 +360,12 @@ def _cx_native(c: int, t: int, native: Sequence[str]) -> List[Instruction]:
         return [Instruction("cx", (c, t))]
     if "cz" in nset:
         return [Instruction("h", (t,)), Instruction("cz", (c, t)), Instruction("h", (t,))]
+    if "zzmax" in nset:   # Quantinuum default: the fixed-angle ZZ() = RZZ(pi/2)
+        return [Instruction("h", (t,)), Instruction("zzmax", (c, t)),
+                Instruction("rz", (c,), (-PI / 2,)), Instruction("rz", (t,), (-PI / 2,)),
+                Instruction("h", (t,))]
     zz_name = "rzz" if "rzz" in nset else "zz" if "zz" in nset else None
-    if zz_name:   # CZ = ZZ(pi/2) RZ(-pi/2) RZ(-pi/2) up to phase (Quantinuum RZZ, IonQ Forte ZZ)
+    if zz_name:   # CZ = ZZ(pi/2) RZ(-pi/2) RZ(-pi/2) up to phase (RZZ, IonQ Forte ZZ)
         return [Instruction("h", (t,)), Instruction(zz_name, (c, t), (PI / 2,)),
                 Instruction("rz", (c,), (-PI / 2,)), Instruction("rz", (t,), (-PI / 2,)),
                 Instruction("h", (t,))]

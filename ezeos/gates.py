@@ -294,6 +294,24 @@ def _rzz(theta: float) -> Matrix:
     ]
 
 
+def _u1q(theta: float, phi: float) -> Matrix:
+    """Quantinuum native U1q(theta, phi) = exp(-i theta/2 (cos phi X + sin phi Y)), radians.
+
+    Same matrix as IQM's PRX; Quantinuum documents U1q(theta, phi) = U(theta, phi - pi/2,
+    pi/2 - phi) and maps it to TKET ``OpType.PhasedX`` (whose angles are in half-turns).
+    Source: https://docs.quantinuum.com/systems/user_guide/hardware_user_guide/system_operation.html
+    """
+    return _prx(theta, phi)
+
+
+def _zzmax() -> Matrix:
+    """Quantinuum native fixed-angle ZZ() = exp(-i pi/4 Z⊗Z) (TKET ``OpType.ZZMax``).
+
+    It equals RZZ(pi/2); Quantinuum rebases circuits to ZZ() and RZZ by default.
+    """
+    return _rzz(math.pi / 2)
+
+
 def _zz(theta: float) -> Matrix:
     """IonQ Forte native ZZ gate, ``exp(-i theta/2 Z⊗Z)`` with ``theta`` in radians.
 
@@ -368,6 +386,7 @@ _register("rz", 1, 1, _rz, "Rotation about Z")
 _register("p", 1, 1, _p, "Phase gate")
 _register("u", 1, 3, _u, "Generic single-qubit gate U(theta, phi, lambda)")
 _register("prx", 1, 2, _prx, "IQM native phased RX")
+_register("u1q", 1, 2, _u1q, "Quantinuum native U1q(theta, phi) (TKET PhasedX)")
 _register("gpi", 1, 1, _gpi, "IonQ native GPI")
 _register("gpi2", 1, 1, _gpi2, "IonQ native GPI2")
 _register("cx", 2, 0, _cx, "Controlled-X (CNOT)")
@@ -381,7 +400,8 @@ _register("iswap", 2, 0, _iswap, "iSWAP")
 _register("ecr", 2, 0, _ecr, "IBM echoed cross-resonance")
 _register("rxx", 2, 1, _rxx, "XX rotation")
 _register("ryy", 2, 1, _ryy, "YY rotation")
-_register("rzz", 2, 1, _rzz, "ZZ rotation (Quantinuum native family)")
+_register("rzz", 2, 1, _rzz, "ZZ rotation; Quantinuum native RZZ (TKET ZZPhase)")
+_register("zzmax", 2, 0, _zzmax, "Quantinuum native fixed-angle ZZ() = RZZ(pi/2) (TKET ZZMax)")
 _register("ms", 2, 2, _ms, "IonQ native Molmer-Sorensen (Aria-class systems)")
 _register("zz", 2, 1, _zz, "IonQ native ZZ (Forte-class systems)")
 _register("ccx", 3, 0, _ccx, "Toffoli")

@@ -138,6 +138,8 @@ class Circuit:
     def ryy(self, theta: float, a: int, b: int) -> "Circuit": return self.append("ryy", [a, b], [theta])
     def rzz(self, theta: float, a: int, b: int) -> "Circuit": return self.append("rzz", [a, b], [theta])
     def zz(self, theta: float, a: int, b: int) -> "Circuit": return self.append("zz", [a, b], [theta])
+    def zzmax(self, a: int, b: int) -> "Circuit": return self.append("zzmax", [a, b])
+    def u1q(self, theta: float, phi: float, q: int) -> "Circuit": return self.append("u1q", [q], [theta, phi])
     def ccx(self, c0: int, c1: int, t: int) -> "Circuit": return self.append("ccx", [c0, c1, t])
     def cswap(self, c: int, a: int, b: int) -> "Circuit": return self.append("cswap", [c, a, b])
 
@@ -252,9 +254,11 @@ def _inverse_of(name: str, params: Tuple[float, ...]) -> Tuple[str, Tuple[float,
     if name == "u":
         theta, phi, lam = params
         return "u", (-theta, -lam, -phi)
-    if name == "prx":
+    if name in ("prx", "u1q"):
         theta, phi = params
-        return "prx", (-theta, phi)
+        return name, (-theta, phi)
+    if name == "zzmax":
+        return "rzz", (-math.pi / 2,)
     if name == "gpi":
         return "gpi", params
     if name == "gpi2":

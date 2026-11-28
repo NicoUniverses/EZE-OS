@@ -2,6 +2,29 @@
 
 All notable changes to EZE OS. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.3.2] - 2026-11-28
+
+Quantinuum Helios native gates: the transpiler now emits U1q, Rz and the fixed-angle ZZ() instead of PRX.
+
+### Fixed
+- Quantinuum Helios used IQM's `prx` name. Quantinuum documents its native set as U1q(θ, φ), virtual Rz(λ),
+  ZZ() = exp(-iπ/4 Z⊗Z) and RZZ(θ) = exp(-iθ/2 Z⊗Z), with TKET names PhasedX, Rz, ZZMax and ZZPhase in units
+  of π ([system operation](https://docs.quantinuum.com/systems/user_guide/hardware_user_guide/system_operation.html),
+  read 2026-11-28). The Helios native set is now `u1q`, `rz`, `zzmax`, `rzz`.
+- Helios fidelities from Quantinuum's launch post (2025-11-05): 1q 0.999975, 2q 0.99921 across all qubit pairs
+  ([blog](https://www.quantinuum.com/blog/introducing-helios-the-most-accurate-quantum-computer-in-the-world),
+  read 2026-11-28). Readout stays at the default: the only published figure (99.99 % SPAM) is for logical qubits.
+
+### Added
+- `u1q` and `zzmax` gates (`Circuit.u1q`, `Circuit.zzmax`), with lowering, inversion, stabilizer support and
+  OpenQASM 2 export as `u` and `rzz(pi/2)`. CX on Helios uses one ZZ(), which is Quantinuum's default rebase.
+- `QuantinuumBackend.tket_ops()`: lists a transpiled circuit as TKET OpTypes with half-turn angles, without pytket.
+- `tests/test_quantinuum_helios.py`: matrices checked entry by entry against Quantinuum's formulas, and transpiled
+  Helios circuits checked against the exact unitary.
+
+### Changed
+- README install line now names the current wheel.
+
 ## [0.3.1] - 2026-11-27
 
 IonQ Forte native gates: the transpiler now emits ZZ instead of Mølmer-Sørensen.

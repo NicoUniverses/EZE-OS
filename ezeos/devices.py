@@ -103,7 +103,9 @@ RIGETTI_NATIVE = ("rx", "rz", "cz", "iswap")
 IONQ_ARIA_NATIVE = ("gpi", "gpi2", "ms")   # MS: Aria-class systems only
 IONQ_FORTE_NATIVE = ("gpi", "gpi2", "zz")  # ZZ: Forte-class systems only
 # https://docs.ionq.com/guides/getting-started-with-native-gates (read 2026-11-27)
-QUANTINUUM_NATIVE = ("prx", "rz", "rzz")
+# U1q (PhasedX), virtual Rz, fixed ZZ() (ZZMax) and RZZ (ZZPhase); Rxxyyzz (TK2) only on request
+# https://docs.quantinuum.com/systems/user_guide/hardware_user_guide/system_operation.html (read 2026-11-28)
+QUANTINUUM_NATIVE = ("u1q", "rz", "zzmax", "rzz")
 SUPERCONDUCTING_GENERIC = ("rx", "ry", "rz", "cz")
 TRAPPED_ION_GENERIC = ("rx", "ry", "rz", "rxx")
 NMR_NATIVE = ("rx", "ry", "rz", "cz")
@@ -191,8 +193,10 @@ _add(Device(
     key="quantinuum_helios", vendor="Quantinuum", model="Helios", qubits=98,
     technology="trapped ion (Ba+)", form="system", native_gates=QUANTINUUM_NATIVE,
     topology=lambda: all_to_all(98), purchase="Sales contract, no public price; also via cloud",
-    source="https://www.quantinuum.com/", sdk="pytket + Quantinuum Nexus (qnexus)",
-    fidelity_2q=0.999, aliases=("quantinuum", "helios"),
+    source="https://www.quantinuum.com/blog/introducing-helios-the-most-accurate-quantum-computer-in-the-world",
+    sdk="pytket + Quantinuum Nexus (qnexus)",
+    # Quantinuum, 2025-11-05: 1q 99.9975 %, 2q 99.921 % across all qubit pairs (read 2026-11-28)
+    fidelity_1q=0.999975, fidelity_2q=0.99921, aliases=("quantinuum", "helios"),
 ))
 _add(Device(
     key="aqt_ibex_q1", vendor="Alpine Quantum Technologies (AQT)", model="IBEX Q1", qubits=12,

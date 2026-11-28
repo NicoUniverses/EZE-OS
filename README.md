@@ -25,7 +25,7 @@ Website: <https://ezeos.org/index.php> · Releases: [GitHub Releases](../../rele
 
 | Layer | Module | What it gives you |
 |---|---|---|
-| Gates | `ezeos.gates` | 35 exact gate definitions, including vendor natives (`sx`, `prx`, `gpi`, `gpi2`, `ms`, `zz`, `ecr`, `rzz`) |
+| Gates | `ezeos.gates` | 37 exact gate definitions, including vendor natives (`sx`, `prx`, `u1q`, `gpi`, `gpi2`, `ms`, `zz`, `ecr`, `rzz`, `zzmax`) |
 | Circuits | `ezeos.circuit` | Fluent circuit API, depth, layers, inverse, ASCII drawing |
 | Simulator | `ezeos.simulator` | Pure-Python state-vector simulator (up to 22 qubits), noise from device fidelities |
 | Stabilizer | `ezeos.stabilizer` | Clifford tableau simulator (Aaronson-Gottesman) for thousands of qubits, with Pauli and readout noise |
@@ -43,7 +43,7 @@ No third-party dependencies. Vendor SDKs are imported only when you use that ven
 ## Install
 
 ```bash
-pip install ezeos-0.1.0-py3-none-any.whl     # from the GitHub release
+pip install ezeos-0.3.2-py3-none-any.whl     # from the GitHub release
 # or from source
 pip install .
 ```
@@ -96,7 +96,7 @@ See [docs/HARDWARE.md](docs/HARDWARE.md) for models, manufacturers, prices and s
 | IQM | Spark, Radiance 20, Radiance 54 | 5 / 20 / 54 | superconducting | iqm-client |
 | IBM | Quantum System Two (Heron) | 156 | superconducting | Qiskit Runtime |
 | IonQ | Forte Enterprise | 36 | trapped ion | native JSON API |
-| Quantinuum | Helios | 98 | trapped ion | pytket + qnexus |
+| Quantinuum | Helios | 98 | trapped ion | pytket + qnexus (U1q, Rz, ZZ(), RZZ) |
 | AQT | IBEX Q1 | 12 | trapped ion | Amazon Braket / provider |
 | SpinQ | Gemini Mini, Triangulum | 2 / 3 | NMR, desktop | OpenQASM export |
 | D-Wave | Advantage2 | 4,400+ | annealing | `ezeos.annealing` + Ocean |

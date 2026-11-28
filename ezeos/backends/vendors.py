@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import math
 import os
-from typing import Dict
+from typing import Dict, List, Tuple
 
 from ..circuit import Circuit
 from ..qasm import to_qasm2, to_qasm3
@@ -151,6 +151,24 @@ class QuantinuumBackend(Backend):
 
     name = "quantinuum"
 
+    # EZE OS name -> TKET OpType. Quantinuum: "The TKET definitions are in units of pi",
+    # so every angle is divided by pi (half-turns). Source: docs.quantinuum.com,
+    # systems/user_guide/hardware_user_guide/system_operation.html (read 2026-11-28).
+    TKET_OPS = {"u1q": "PhasedX", "prx": "PhasedX", "rz": "Rz", "zzmax": "ZZMax", "rzz": "ZZPhase"}
+
+    @classmethod
+    def tket_ops(cls, circuit: Circuit) -> List[Tuple[str, Tuple[int, ...], Tuple[float, ...]]]:
+        """List a transpiled Helios circuit as (OpType, qubits, half-turn params), without pytket."""
+        ops = []
+        for ins in circuit:
+            if ins.name in ("measure", "barrier", "reset"):
+                ops.append((ins.name.capitalize(), ins.qubits, ()))
+                continue
+            if ins.name not in cls.TKET_OPS:
+                raise ValueError(f"{ins.name} is not a Quantinuum native gate; transpile for Helios first")
+            ops.append((cls.TKET_OPS[ins.name], ins.qubits, tuple(p / math.pi for p in ins.params)))
+        return ops
+
     def run(self, circuit: Circuit, shots: int = 1024) -> Result:
         qasm_mod = require("pytket.qasm", "pytket")
         qnx = require("qnexus")
@@ -187,14 +205,14 @@ class OpenQASMExportBackend(Backend):
 
 
 def _prx_to_u(circuit: Circuit) -> Circuit:
-    """PRX(theta, phi) == U(theta, phi - pi/2, pi/2 - phi) for OpenQASM 2 export."""
+    """PRX/U1q(theta, phi) == U(theta, phi - pi/2, pi/2 - phi) and ZZ() == RZZ(pi/2) for OpenQASM 2."""
     c = Circuit(circuit.num_qubits, circuit.num_clbits, circuit.name)
     for ins in circuit:
-        if ins.name == "prx":
+        if ins.name in ("prx", "u1q"):
             th, ph = ins.params
             c.append("u", ins.qubits, (th, ph - math.pi / 2, math.pi / 2 - ph))
-        elif ins.name == "rzz":
-            c.append("rzz", ins.qubits, ins.params)
+        elif ins.name == "zzmax":
+            c.append("rzz", ins.qubits, (math.pi / 2,))
         else:
             c.append(ins.name, ins.qubits, ins.params, ins.clbits)
     return c
